@@ -1,5 +1,4 @@
 class API::CatsController < ApiController
-  before_action :set_cat, only: [:show, :update, :destroy]
 
   def index
     cats = Cat.all
@@ -8,29 +7,27 @@ class API::CatsController < ApiController
   end
 
   def show
+    cat = Cat.find(params[:id])
     render json: cat, status: 200
   end
 
   def create
-    cat = Cat.new(cat_params)
+    cat = Cat.create(cat_params)
 
     if cat.save
-      render json: cat
+      render json: cat, status: 200
     else
       render json: cat.errors, status: :unprocessable_entity
     end
   end
 
   def update
+    cat = Cat.find(params[:id])
     if cat.update(cat_params)
-      render json: cat
+      render json: cat, status: 200
     else
       render json: cat.errors, status: :unprocessable_entity
     end
-  end
-
-  def destroy
-    cat.destroy
   end
 
   private
@@ -39,6 +36,6 @@ class API::CatsController < ApiController
     end
 
     def cat_params
-      params.require(:cat).permit(:color, :age, :details, :photo, :address)
+      params.require(:cat).permit(:color, :age, :details, :photo, :address, :likes)
     end
 end
